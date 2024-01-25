@@ -19,16 +19,17 @@ app.get("/ping", (_, res) => {
   res.send("pong");
 });
 
-app.get("/proxy/:url", async (req, res) => {
+app.get("/proxy/", async (req, res) => {
   try {
-    const { url } = req.params;
+    const { url = null } = req.query;
+
+    if (!url) throw String("URL not provided");
 
     const response = await axios(url);
-
-    console.log({ data: response.data });
-
+    console.debug("DATA: ", response.data);
     res.status(200).send(response.data);
   } catch (error) {
+    console.error("ERROR:", error);
     res.status(400).send();
   }
 });
